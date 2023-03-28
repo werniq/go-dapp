@@ -1,0 +1,16 @@
+#FROM golang:1.20-
+FROM ubuntu:latest
+WORKDIR .
+
+COPY . .
+ARG contractName=SampleContract.sol
+
+RUN sudo apt-get update && sudo apt-get install -y software-properties-common
+RUN sudo add-apt-repository ppa:ethereum/ethereum && sudo apt-get update
+RUN sudo apt-get install solc
+RUN solc --version
+
+# creates new .go contract instance
+RUN apigen --sol $contractName.sol --pkg main --out $contractName.go
+
+CMD ["apigen", "--sol", "$contractName.sol", "--pkg", "main", "--out", "$contractName.go"]
